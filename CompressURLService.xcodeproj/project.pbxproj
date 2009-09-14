@@ -179,7 +179,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -R ${CONFIGURATION_BUILD_DIR}/${PRODUCT_NAME}.${WRAPPER_EXTENSION} ${INSTALL_PATH}/";
+			shellScript = "mkdir -p ${INSTALL_PATH}\ncp -R ${CONFIGURATION_BUILD_DIR}/${PRODUCT_NAME}.${WRAPPER_EXTENSION} ${INSTALL_PATH}/";
 		};
 /* End PBXShellScriptBuildPhase section */
 
