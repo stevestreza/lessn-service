@@ -1,7 +1,4 @@
-This is a text service for Mac OS X 10.6+ which compresses URLs with Lessn 
-(http://shauninman.com/archive/2009/08/17/less_n) or ButteredURLs 
-(http://github.com/jfro/butteredurls). You'll need to have one of those running
-on your own server. 
+This is a text service for Mac OS X 10.6+ which compresses URLs with [Lessn](http://shauninman.com/archive/2009/08/17/less_n) or [ButteredURLs](http://github.com/jfro/butteredurls). You'll need to have one of those running on your own server. 
 
 Installation
 ============
@@ -12,7 +9,7 @@ Installation
 4. Activate the service in System Preferences > Keyboard > Keyboard Shortcuts
 5. In your terminal, type and replace **LessnDomain** with your domain:
 
-      defaults write com.stevestreza.lessnshorten baseURL **LessnDomain**
+      `defaults write com.stevestreza.lessnshorten baseURL **LessnDomain**`
 
 License
 =======
