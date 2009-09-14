@@ -10,8 +10,8 @@ Installation
 2. Open the xcodeproj inside
 3. Build (this will copy the service into your ~/Library/Services/ folder)
 4. Activate the service in System Preferences > Keyboard > Keyboard Shortcuts
-5. In your terminal, type and replace <<LessnDomain>> with your domain:
-      defaults write com.stevestreza.lessnshorten baseURL <<LessnDomain>>
+5. In your terminal, type and replace **LessnDomain** with your domain:
+      defaults write com.stevestreza.lessnshorten baseURL **LessnDomain**
 
 License
 =======
