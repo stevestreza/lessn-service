@@ -1,0 +1,8 @@
+Version History
+===============
+
+Version 0.2 (9/20/2009):
+* Added support for API for Lessn 1.0.5+ or ButteredURLs 1.1.1+
+
+Version 0.1 (9/14/2009):
+* Initial version. Supports Lessn 1.0+ or ButteredURLs 1.1+
