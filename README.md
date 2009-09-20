@@ -11,6 +11,10 @@ Installation
 
       `defaults write com.stevestreza.lessnshorten baseURL LessnDomain`
 
+6. Find your API key on your Lessn dashboard, and add it in your terminal:
+
+     `defaults write com.stevestreza.lessnshorten apiKey YourAPIKey`
+
 License
 =======
 
