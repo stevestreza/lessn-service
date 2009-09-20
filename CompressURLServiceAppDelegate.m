@@ -45,22 +45,17 @@
 	[pboard writeObjects:[NSArray arrayWithObject:newURL]];
 }
 
--(NSURL *)compressedURLForURL:(NSURL *)url{
-	NSString *baseURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"];
-	if(!baseURL){
-		NSLog(@"%@",NSLocalizedString(@"Error: You need to supply a Lessn install via defaults",nil));
-		NSLog(@"%@",NSLocalizedString(@"For a Lessn install at 'http://omgwtf.com/-/', use 'omgwtf.com'", nil));
-		NSLog(@"%@",NSLocalizedString(@"   defaults write com.stevestreza.lessnshorten baseURL omgwtf.com",nil));
-		return nil;
+-(NSURL *)compressURL:(NSURL *)url atBaseURL:(NSURL *)baseURL{
+	NSString *baseURLString = [baseURL absoluteString];
+	if([[baseURLString substringFromIndex:[baseURLString length] - 1] isEqualToString:@"/"]){
+		baseURLString = [baseURLString substringToIndex:[baseURLString length] - 1];
 	}
 	
-	if([[baseURL substringFromIndex:[baseURL length] - 1] isEqualToString:@"/"]){
-		baseURL = [baseURL substringToIndex:[baseURL length] - 1];
-	}
+	NSLog(@"Using deprecated method to fetch URL from %@",baseURLString);
+
+	NSURL *newURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/-/?url=%@",baseURLString,[[url absoluteString] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 	
-	NSURL *newURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/-/?url=%@",baseURL,[[url absoluteString] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-	
-//	NSData *htmlData = [newURL resourceDataUsingCache:NO];
+	//	NSData *htmlData = [newURL resourceDataUsingCache:NO];
 	NSData *htmlData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:newURL] returningResponse:nil error:nil];
 	NSString *html = [[[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding] autorelease];
 	
@@ -68,8 +63,7 @@
 		NSLog(@"Cannot download data from URL %@",newURL);
 		return nil;
 	}
-
-#warning I totally do not need to be doing this much work. Damn you, Lessn.
+	
 	NSString *searchString = @"<input type=\"text\" id=\"url\" value=\"";
 	NSRange range = [html rangeOfString:searchString];
 	NSUInteger location = range.location + range.length;
@@ -79,6 +73,47 @@
 	newURL = [NSURL URLWithString:[html substringWithRange:NSMakeRange(location, endLocation-location)]];
 	
 	return newURL;
+}
+
+-(NSURL *)compressURL:(NSURL *)url atBaseURL:(NSURL *)baseURL withAPIKey:(NSString *)apiKey{
+	NSString *baseURLString = [baseURL absoluteString];
+	if([[baseURLString substringFromIndex:[baseURLString length] - 1] isEqualToString:@"/"]){
+		baseURLString = [baseURLString substringToIndex:[baseURLString length] - 1];
+	}
+	
+	NSURL *newURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@/-/?api=%@&url=%@",baseURLString, apiKey, [[url absoluteString] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+	
+	//	NSData *htmlData = [newURL resourceDataUsingCache:NO];
+	NSData *htmlData = [NSURLConnection sendSynchronousRequest:[NSURLRequest requestWithURL:newURL] returningResponse:nil error:nil];
+	NSString *shortURL = [[[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding] autorelease];
+	
+	return [NSURL URLWithString:shortURL];
+}
+
+-(NSURL *)compressedURLForURL:(NSURL *)url{
+	NSString *baseURLString = [[NSUserDefaults standardUserDefaults] objectForKey:@"baseURL"];
+	if(!baseURLString){
+		NSLog(@"%@",NSLocalizedString(@"Error: You need to supply a Lessn or ButteredURLs install via defaults",@""));
+		NSLog(@"%@",NSLocalizedString(@"  For a Lessn install at 'http://omgwtf.com/-/', use 'omgwtf.com'", @""));
+		NSLog(@"%@",NSLocalizedString(@"    defaults write com.stevestreza.lessnshorten baseURL omgwtf.com",@""));
+		return nil;
+	}
+	
+	NSURL *baseURL = [NSURL URLWithString:baseURLString];
+	
+	NSString *apiKey = [[NSUserDefaults standardUserDefaults] objectForKey:@"apiKey"];
+	if(!apiKey){
+		NSLog(@"%@",NSLocalizedString(@"Warning: You didn't supply an API key for your Lessn/ButteredURLs installation",@""));
+		NSLog(@"%@",NSLocalizedString(@"  This method is deprecated, and uses a hack.",@""));
+		NSLog(@"%@",NSLocalizedString(@"  Find your API key in the web app's dashboard, and add it via defaults.",@""));
+		NSLog(@"%@",NSLocalizedString(@"    defaults write com.stevestreza.lessnshorten apiKey <<your key>>", @""));
+		return [self compressURL:url 
+					   atBaseURL:baseURL];
+	}else{
+		return [self compressURL:url
+					   atBaseURL:baseURL
+					  withAPIKey:apiKey];
+	}
 }
 
 @end

@@ -14,4 +14,13 @@
 
 @property (assign) IBOutlet NSWindow *window;
 -(NSURL *)compressedURLForURL:(NSURL *)url;
+
+//requires Lessn 1.0.5+ or ButteredURLs 1.1.1+
+-(NSURL *)compressURL:(NSURL *)url
+			atBaseURL:(NSURL *)baseURL 
+		   withAPIKey:(NSString *)apiKey;
+
+//deprecated method
+-(NSURL *)compressURL:(NSURL *)url 
+			atBaseURL:(NSURL *)baseURL;
 @end
